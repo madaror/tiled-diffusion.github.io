@@ -1,940 +1,117 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="description"
-          content="A novel approach for generating seamlessly tileable images using diffusion models.">
-    <meta name="keywords" content="Tiled Diffusion, Tiling, Tiled">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tiled Diffusion</title>
-
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
-    <script>
-    window.dataLayer = window.dataLayer || [];
-
-    function gtag() {
-      dataLayer.push(arguments);
-    }
-
-    gtag('js', new Date());
-
-    gtag('config', 'G-PYVRSFMDRL');
-
-
-
-
-
-
-
-    </script>
-
-    <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
-          rel="stylesheet">
-
-    <link rel="stylesheet" href="./static/css/bulma.min.css">
-    <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
-    <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
-    <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
-    <link rel="stylesheet" href="./static/css/index.css">
-    <!--  <link rel="icon" href="./static/images/favicon.svg">-->
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script defer src="./static/js/fontawesome.all.min.js"></script>
-    <script src="./static/js/bulma-carousel.min.js"></script>
-    <script src="./static/js/bulma-slider.min.js"></script>
-    <script src="./static/js/index.js"></script>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <div class="container">
+        <header>
+            <h1 class="title">Tiled Diffusion</h1>
+            
+            <div class="authors">
+                <a href="https://www.linkedin.com/in/or-madar-a73bb5143/" target="_blank">Or Madar</a>
+                <span class="author-separator">·</span>
+                <a href="https://www.ohadf.com/" target="_blank">Ohad Fried</a>
+            </div>
+            
+            <div class="institution">
+                Computer Vision & Graphics Lab, Reichman University
+            </div>
+            
+            <div class="buttons">
+                <a href="https://github.com/madaror/tiled-diffusion.github.io/raw/refs/heads/main/static/pdf/tiled_diffusion_supp.pdf" target="_blank" class="btn">Supplemental</a>
+                <a href="https://arxiv.org/abs/2412.15185" target="_blank" class="btn">arXiv</a>
+                <a href="https://arxiv.org/pdf/2412.15185" target="_blank" class="btn">Paper</a>
+                <a href="https://github.com/madaror/tiled-diffusion" target="_blank" class="btn">Code</a>
+            </div>
 
+            <div class="conference-banner">
+                <span class="conference-text">CVPR</span>
+                <span class="conference-year">2025</span>
+            </div>
+        </header>
 
-<section class="hero">
-    <div class="hero-body">
-        <div class="container is-max-desktop">
-            <div class="columns is-centered">
-                <div class="column has-text-centered">
-                    <h1 class="title is-1 publication-title">Tiled Diffusion</h1>
-                    <div class="is-size-5 publication-authors">
-            <span class="author-block">
-              <a href="https://www.linkedin.com/in/or-madar-a73bb5143/">Or Madar</a><sup></sup>,</span>
-                        <span class="author-block">
-              <a href="https://www.ohadf.com/">Ohad Fried</a><sup></sup></span>
-                        <span class="author-block">
-            </span>
+        <section class="teaser">
+            <div class="teaser-image-container">
+                <img src="images/teaser.jpg" alt="Tiled Diffusion Teaser" class="teaser-image">
+            </div>
+            <p class="teaser-text"><span class="highlight">Tiled Diffusion</span> is a novel approach for generating seamlessly tileable images using diffusion models.</p>
+        </section>
+
+        <section class="abstract">
+            <h2>Abstract</h2>
+            <p>
+                Image tiling—the seamless connection of disparate images to create a coherent visual field—is crucial for applications such as texture creation, video game asset development, and digital art. Traditionally, tiles have been constructed manually, a method that poses significant limitations in scalability and flexibility. Recent research has attempted to automate this process using generative models. However, current approaches primarily focus on tiling textures and manipulating models for single-image generation, without inherently supporting the creation of multiple interconnected tiles across diverse domains. This paper presents Tiled Diffusion, a novel approach that extends the capabilities of diffusion models to accommodate the generation of cohesive tiling patterns across various domains of image synthesis that require tiling. Our method supports a wide range of tiling scenarios, from self-tiling to complex many-to-many connections, enabling seamless integration of multiple images. Tiled Diffusion automates the tiling process, eliminating the need for manual intervention and enhancing creative possibilities in various applications, such as seamlessly tiling of existing images, tiled texture creation, and 360° synthesis.
+            </p>
+        </section>
+
+        <section class="method">
+            <h2>Method</h2>
+            <div class="method-image-container">
+                <img src="images/Method.png" alt="Tiled Diffusion Method" class="method-image">
+            </div>
+            <p class="method-caption">An example of a many-to-many tiling scenario demonstrating tiling / similarity constraint on the left side of the first image</p>
+        </section>
+
+        <section class="examples">
+            <div class="example-section">
+                <h2>Many-To-Many</h2>
+                <div class="carousel-container">
+                    <div class="carousel" id="many-to-many-carousel">
+                        <!-- Carousel items will be populated by JavaScript -->
                     </div>
+                    <button class="carousel-btn prev" id="many-to-many-prev">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="carousel-btn next" id="many-to-many-next">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
 
-                    <div class="is-size-5 publication-authors">
-                        <span class="author-block"><sup></sup>Computer Vision & Graphics Lab, Reichman University</span>
+            <div class="example-section">
+                <h2>Tileable Texture Synthesis</h2>
+                <div class="carousel-container">
+                    <div class="carousel" id="texture-carousel">
+                        <!-- Carousel items will be populated by JavaScript -->
                     </div>
+                    <button class="carousel-btn prev" id="texture-prev">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="carousel-btn next" id="texture-next">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
 
-                    <div class="column has-text-centered">
-                        <div class="publication-links">
-                            <!-- PDF Link. -->
-                            <span class="link-block">
-                                            <a href="https://github.com/madaror/tiled-diffusion.github.io/raw/refs/heads/main/static/pdf/tiled_diffusion_supp.pdf"
-                                               class="external-link button is-normal is-rounded is-dark">
-                                              <span class="icon">
-                                                  <i class="fas fa-file-pdf"></i>
-                                              </span>
-                                              <span>Supplemental</span>
-                                            </a>
-                                          </span>
-                            <span class="link-block">
-                                            <a href="https://arxiv.org/abs/2412.15185"
-                                               class="external-link button is-normal is-rounded is-dark">
-                                              <span class="icon">
-                                                  <i class="ai ai-arxiv"></i>
-                                              </span>
-                                              <span>arXiv</span>
-                                            </a>
-                                          </span>
-                            <span class="link-block">
-                                            <a href="https://arxiv.org/pdf/2412.15185"
-                                               class="external-link button is-normal is-rounded is-dark">
-                                              <span class="icon">
-                                                  <i class="fas fa-file-pdf"></i>
-                                              </span>
-                                              <span>Paper</span>
-                                            </a>
-                                          </span>
-                            <!-- Code Link. -->
-                            <span class="link-block">
-                <a href="https://github.com/madaror/tiled-diffusion"
-                   class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon">
-                      <i class="fab fa-github"></i>
-                  </span>
-                  <span>Code</span>
-                  </a>
-              </span>
-                        </div>
-
+            <div class="example-section">
+                <h2>360° Panorama Synthesis</h2>
+                <div class="carousel-container">
+                    <div class="carousel" id="panorama-carousel">
+                        <!-- Carousel items will be populated by JavaScript -->
                     </div>
+                    <button class="carousel-btn prev" id="panorama-prev">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="carousel-btn next" id="panorama-next">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
                 </div>
             </div>
-        </div>
-    </div>
-</section>
+        </section>
 
-<section class="hero teaser">
-    <div class="container is-max-desktop">
-        <div class="hero-body">
-            <img src="./static/images_td/teaser/teaser.jpg"
-                 class="interpolation-image"
-                 alt="Interpolate start reference image."/>
-            <!--      <video id="teaser" autoplay muted loop playsinline height="100%">-->
-            <!--        <source src="./static/videos/teaser.mp4"-->
-            <!--                type="video/mp4">-->
-            <!--      </video>-->
-            <h2 class="subtitle has-text-centered">
-                <span class="dnerf">Tiled Diffusion</span> is a novel approach for generating seamlessly tileable images
-                using diffusion models.
-            </h2>
-        </div>
-    </div>
-</section>
+        <section class="note">
+            <p>For more results please look at our paper / supplemental material</p>
+        </section>
 
-<section class="section">
-    <div class="hero is-light is-small">
-        <!-- Abstract. -->
-        <div class="columns is-centered has-text-centered">
-            <div class="column is-four-fifths">
-                <h2 class="title is-3">Abstract</h2>
-                <div class="content has-text-justified">
-                    <p>
-                        Image tiling—the seamless connection of disparate images to create a coherent visual field—is
-                        crucial for applications such as texture creation, video game asset development, and digital
-                        art. Traditionally, tiles have been constructed manually, a method that poses significant
-                        limitations in scalability and flexibility. Recent research has attempted to automate this
-                        process using generative models. However, current approaches primarily focus on tiling textures
-                        and manipulating models for single-image generation, without inherently supporting the creation
-                        of multiple interconnected tiles across diverse domains. This paper presents Tiled Diffusion, a
-                        novel approach that extends the capabilities of diffusion models to accommodate the generation
-                        of cohesive tiling patterns across various domains of image synthesis that require tiling. Our
-                        method supports a wide range of tiling scenarios, from self-tiling to complex many-to-many
-                        connections, enabling seamless integration of multiple images. Tiled Diffusion automates the
-                        tiling process, eliminating the need for manual intervention and enhancing creative
-                        possibilities in various applications, such as seamlessly tiling of existing images, tiled
-                        texture creation, and 360° synthesis.
-                    </p>
-                </div>
-            </div>
-        </div>
-        <!--/ Abstract. -->
-    </div>
-</section>
-
-<section class="hero teaser">
-    <div class="container is-max-desktop">
-
-        <div class="columns is-centered has-text-centered">
-            <div class="column is-four-fifths">
-                <h2 class="title is-3">Method</h2>
-            </div>
-        </div>
-        <div class="hero-body">
-
-            <img src="./static/images_td/teaser/Method.png"
-                 class="interpolation-image"
-                 alt="Interpolate start reference image."/>
-            <!--      <video id="teaser" autoplay muted loop playsinline height="100%">-->
-            <!--        <source src="./static/videos/teaser.mp4"-->
-            <!--                type="video/mp4">-->
-            <!--      </video>-->
-            <h2 class="subtitle has-text-centered">
-                An example of a many-to-many tiling scenario demonstrating tiling / similarity constraint on the left
-                side of the first image
-            </h2>
-        </div>
-    </div>
-</section>
-
-
-<section class="hero is-light is-small">
-    <div class="columns is-centered has-text-centered">
-        <div class="column is-four-fifths">
-            <h2 class="title is-3">Self-Tiling</h2>
-        </div>
-    </div>
-    <div class="hero-body">
-        <div class="container">
-            <div id="results-carousel" class="carousel results-carousel">
-                <div class="item item-steve">
-                    <img src="./static/images_td/self/1.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-
-                <div class="item item-steve">
-                    <img src="./static/images_td/self/2.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-
-                <div class="item item-steve">
-                    <img src="./static/images_td/self/3.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-
-                <div class="item item-steve">
-                    <img src="./static/images_td/self/4.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-
-                <div class="item item-steve">
-                    <img src="./static/images_td/self/5.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-
-                <div class="item item-steve">
-                    <img src="./static/images_td/self/6.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-
-                <div class="item item-steve">
-                    <img src="./static/images_td/self/7.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-
-                <div class="item item-steve">
-                    <img src="./static/images_td/self/8.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-
-                <div class="item item-steve">
-                    <img src="./static/images_td/self/9.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-
-                <div class="item item-steve">
-                    <img src="./static/images_td/self/10.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-
-                <div class="item item-steve">
-                    <img src="./static/images_td/self/11.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-
-                <div class="item item-steve">
-                    <img src="./static/images_td/self/12.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-
-                <div class="item item-steve">
-                    <img src="./static/images_td/self/13.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-
-                <div class="item item-steve">
-                    <img src="./static/images_td/self/14.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-
-                <div class="item item-steve">
-                    <img src="./static/images_td/self/15.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-
-                <div class="item item-steve">
-                    <img src="./static/images_td/self/16.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-
-                <div class="item item-steve">
-                    <img src="./static/images_td/self/17.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-            </div>
-        </div>
-        <h2 class="subtitle has-text-centered">
-            The results are a single image tiled [1x3]
-        </h2>
-    </div>
-
-</section>
-
-<section class="hero is-light is-small">
-    <div class="columns is-centered has-text-centered">
-        <div class="column is-four-fifths">
-            <h2 class="title is-3">One-To-One Tiling</h2>
-        </div>
-    </div>
-    <div class="hero-body">
-        <div class="container">
-            <div id="results-carousel" class="carousel results-carousel">
-                <div class="item item-steve">
-                    <img src="./static/images_td/one/1.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-
-                <div class="item item-steve">
-                    <img src="./static/images_td/one/2.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-
-                <div class="item item-steve">
-                    <img src="./static/images_td/one/3.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-
-                <div class="item item-steve">
-                    <img src="./static/images_td/one/4.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-
-                <div class="item item-steve">
-                    <img src="./static/images_td/one/5.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-
-                <div class="item item-steve">
-                    <img src="./static/images_td/one/6.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-
-                <div class="item item-steve">
-                    <img src="./static/images_td/one/7.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-
-                <div class="item item-steve">
-                    <img src="./static/images_td/one/8.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-
-                <div class="item item-steve">
-                    <img src="./static/images_td/one/9.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-
-                <div class="item item-steve">
-                    <img src="./static/images_td/one/10.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-            </div>
-        </div>
-        <h2 class="subtitle has-text-centered">
-            The results are two images tiled [1x4]
-        </h2>
-    </div>
-</section>
-
-
-<section class="hero is-light is-small">
-    <div class="columns is-centered has-text-centered">
-        <div class="column is-four-fifths">
-            <h2 class="title is-3">Many-To-Many Tiling</h2>
-        </div>
-    </div>
-    <div class="hero-body">
-        <div class="container">
-            <div id="three-image-carousel" class="carousel results-carousel">
-                <!-- First group -->
-                <div class="item item-steve">
-                    <img src="./static/images_td/many/1.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/many/2.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/many/3.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-
-                <!-- Repeat for remaining images -->
-                <div class="item item-steve">
-                    <img src="./static/images_td/many/4.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/many/5.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/many/6.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-
-                <div class="item item-steve">
-                    <img src="./static/images_td/many/7.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/many/8.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/many/9.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-
-                <div class="item item-steve">
-                    <img src="./static/images_td/many/10.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-
-                <div class="item item-steve">
-                    <img src="./static/images_td/many/11.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-
-                <div class="item item-steve">
-                    <img src="./static/images_td/many/12.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-
-
-            </div>
-        </div>
-        <h2 class="subtitle has-text-centered">
-            The results are two images tiled [1x4]
-        </h2>
-    </div>
-</section>
-
-
-<section class="hero is-light is-small">
-    <div class="columns is-centered has-text-centered">
-        <div class="column is-four-fifths">
-        </div>
-    </div>
-    <div class="hero-body">
-        <div class="container">
-            <div id="three-image-carousel" class="carousel results-carousel">
-                <div class="item item-steve">
-                    <img src="./static/images_td/many/19.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-
-                <div class="item item-steve">
-                    <img src="./static/images_td/many/20.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-
-                <div class="item item-steve">
-                    <img src="./static/images_td/many/21.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/many/13.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-
-                <div class="item item-steve">
-                    <img src="./static/images_td/many/14.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-
-                <div class="item item-steve">
-                    <img src="./static/images_td/many/15.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-
-                <div class="item item-steve">
-                    <img src="./static/images_td/many/16.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-
-                <div class="item item-steve">
-                    <img src="./static/images_td/many/17.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-
-                <div class="item item-steve">
-                    <img src="./static/images_td/many/18.png"
-                         class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-
-
-            </div>
-        </div>
-        <h2 class="subtitle has-text-centered">
-            The results are three images tiled [3x3]
-        </h2>
-    </div>
-</section>
-
-
-<section class="hero is-light is-small">
-    <div class="columns is-centered has-text-centered">
-        <div class="column is-four-fifths">
-            <h2 class="title is-3">Tiled Texture Synthesis</h2>
-        </div>
-    </div>
-    <div class="hero-body">
-        <div class="container">
-            <div id="results-carousel" class="carousel results-carousel">
-                <div class="item item-steve">
-                    <img src="./static/images_td/texture/21.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/texture/22.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/texture/23.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/texture/1.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/texture/2.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/texture/3.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/texture/4.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/texture/5.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/texture/6.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/texture/7.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/texture/8.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/texture/9.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/texture/10.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/texture/11.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/texture/12.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/texture/13.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/texture/14.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/texture/15.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/texture/16.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/texture/17.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/texture/18.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/texture/19.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/texture/20.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-
-                <div class="item item-steve">
-                    <img src="./static/images_td/texture/24.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/texture/25.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/texture/26.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/texture/27.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/texture/28.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/texture/29.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/texture/30.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/texture/31.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/texture/32.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/texture/33.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/texture/34.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/texture/35.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-            </div>
-        </div>
-        <h2 class="subtitle has-text-centered">
-            Each of the results is a texture tiled [2x2] with itself
-        </h2>
-    </div>
-</section>
-
-<section class="hero is-light is-small">
-    <div class="columns is-centered has-text-centered">
-        <div class="column is-four-fifths">
-            <h2 class="title is-3">360° Synthesis</h2>
-        </div>
-    </div>
-    <div class="hero-body">
-        <div class="container">
-            <div id="two-image-carousel" class="carousel results-carousel">
-                <div class="item item-steve">
-                    <img src="./static/images_td/360/1.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/360/2.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/360/3.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/360/4.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/360/5.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/360/6.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/360/7.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/360/8.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/360/9.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/360/10.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/360/11.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/360/12.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/360/13.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/360/14.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/360/15.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/360/16.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/360/17.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/360/18.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/360/19.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/360/20.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/360/21.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/360/22.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/360/23.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/360/24.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/360/25.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/360/26.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-            </div>
-        </div>
-        <h2 class="subtitle has-text-centered">
-            Left: Original image synthesised as a wrapped 360° view
-        </h2>
-        <h2 class="subtitle has-text-centered">
-            Right: Horizontally translated version of it to demonstrate the wrapping
-        </h2>
-    </div>
-</section>
-
-
-<section class="hero is-light is-small">
-    <div class="columns is-centered has-text-centered">
-        <div class="column is-four-fifths">
-            <h2 class="title is-3">Seamlessly Tiling Existing Images</h2>
-        </div>
-    </div>
-    <div class="hero-body">
-        <div class="container">
-            <div id="two-image-carousel" class="carousel results-carousel">
-                <div class="item item-steve">
-                    <img src="./static/images_td/diff/not_tiled/1.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/diff/tiled/1.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-
-                <div class="item item-steve">
-                    <img src="./static/images_td/diff/not_tiled/2.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/diff/tiled/2.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/diff/not_tiled/3.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/diff/tiled/3.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/diff/not_tiled/4.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/diff/tiled/4.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/diff/not_tiled/5.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/diff/tiled/5.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/diff/not_tiled/6.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/diff/tiled/6.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/diff/not_tiled/7.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/diff/tiled/7.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/diff/not_tiled/8.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/diff/tiled/8.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/diff/not_tiled/9.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/diff/tiled/9.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/diff/not_tiled/10.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-                <div class="item item-steve">
-                    <img src="./static/images_td/diff/tiled/10.png" class="interpolation-image"
-                         alt="Interpolate start reference image."/>
-                </div>
-            </div>
-        </div>
-        <h2 class="subtitle has-text-centered">
-            Left: Original image tiled [1x3]
-        </h2>
-        <h2 class="subtitle has-text-centered">
-            Right: Transformed image tiled [1x3]
-        </h2>
-    </div>
-</section>
-
-
-<section class="section" id="BibTeX">
-    <div class="container is-max-desktop content">
-        <h2 class="title">BibTeX</h2>
-        <pre><code>@misc{madar2024tileddiffusion,
+        <section class="bibtex">
+            <h2>BibTeX</h2>
+            <pre><code>@misc{madar2024tileddiffusion,
       title={Tiled Diffusion},
       author={Or Madar and Ohad Fried},
       year={2024},
@@ -943,33 +120,9 @@
       primaryClass={cs.CV},
       url={https://arxiv.org/abs/2412.15185},
 }</code></pre>
+        </section>
     </div>
-</section>
 
-
-<footer class="footer">
-    <div class="container">
-        <div class="content has-text-centered">
-
-        </div>
-        <div class="columns is-centered">
-            <div class="column is-8">
-                <div class="content">
-                    <p>
-                        This website is licensed under a <a rel="license"
-                                                            href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
-                        Commons Attribution-ShareAlike 4.0 International License</a>.
-                    </p>
-                    <p>
-                        We would like to thank <a
-                            href="https://github.com/nerfies/nerfies.github.io">NERFIES</a> for the template that was
-                        used for this website
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-</footer>
-
+    <script src="js/carousels.js"></script>
 </body>
 </html>
