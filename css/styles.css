@@ -111,6 +111,16 @@ header {
     position: relative;
 }
 
+.conference-link {
+    text-decoration: none;
+    display: inline-block;
+    transition: transform 0.2s ease;
+}
+
+.conference-link:hover {
+    transform: translateY(-2px);
+}
+
 .conference-text {
     font-family: 'Montserrat', sans-serif;
     font-weight: 700;
@@ -279,12 +289,50 @@ header {
 
 .carousel {
     display: flex;
-    transition: transform 0.5s ease;
+    width: 100%;
+    position: relative;
 }
 
 .carousel-item {
     flex: 0 0 100%;
     padding: 0 0.5rem;
+    transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+}
+
+.carousel-item.slide-next-out {
+    transform: translateX(-100%);
+    opacity: 0;
+}
+
+.carousel-item.slide-prev-out {
+    transform: translateX(100%);
+    opacity: 0;
+}
+
+.carousel-item.slide-next-in {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translateX(100%);
+    opacity: 0;
+}
+
+.carousel-item.slide-next-in.active {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.carousel-item.slide-prev-in {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translateX(-100%);
+    opacity: 0;
+}
+
+.carousel-item.slide-prev-in.active {
+    transform: translateX(0);
+    opacity: 1;
 }
 
 .carousel-item img {
