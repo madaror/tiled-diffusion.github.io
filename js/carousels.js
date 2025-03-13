@@ -1,13 +1,13 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Configuration for Many-to-Many carousel (3 images per slide)
+    // Configuration for Many-to-Many carousel (2 images per slide)
     const manyToManyConfig = {
         carouselId: 'many-to-many-carousel',
         prevBtnId: 'many-to-many-prev',
         nextBtnId: 'many-to-many-next',
-        imagesPerSlide: 3,
+        imagesPerSlide: 2,
         basePath: 'images/many-to-many/',
-        // Format: set1-img1.png, set1-img2.png, set1-img3.png, set2-img1.png, etc.
-        totalSets: 3, // Change this based on how many sets you have
+        // Format: set1-img1.png, set1-img2.png, set2-img1.png, etc.
+        totalSets: 4, // Changed from 3 to 4 sets
         fileExtension: 'png'
     };
 
@@ -53,9 +53,23 @@ function initializeGroupCarousel(config) {
 
     let currentSetIndex = 0;
     let isAnimating = false;
+    let imagesPerSlide = config.imagesPerSlide;
 
-    // Initial render
-    renderImageSet(currentSetIndex);
+    // Adjust images per slide based on screen width
+    function updateImagesPerSlide() {
+        if (window.innerWidth <= 768) {
+            imagesPerSlide = 1;
+        } else {
+            imagesPerSlide = config.imagesPerSlide;
+        }
+        renderImageSet(currentSetIndex);
+    }
+
+    // Initial setup
+    updateImagesPerSlide();
+
+    // Listen for window resize
+    window.addEventListener('resize', updateImagesPerSlide);
 
     // Event listeners
     prevBtn.addEventListener('click', function() {
@@ -83,7 +97,7 @@ function initializeGroupCarousel(config) {
         const imageGroup = document.createElement('div');
         imageGroup.className = 'carousel-item-group';
 
-        for (let i = 1; i <= config.imagesPerSlide; i++) {
+        for (let i = 1; i <= imagesPerSlide; i++) {
             const img = document.createElement('img');
             img.src = `${config.basePath}set${setIndex + 1}-img${i}.${config.fileExtension}`;
             img.alt = `Set ${setIndex + 1} Image ${i}`;
@@ -102,7 +116,7 @@ function initializeGroupCarousel(config) {
         const imageGroup = document.createElement('div');
         imageGroup.className = 'carousel-item-group';
 
-        for (let i = 1; i <= config.imagesPerSlide; i++) {
+        for (let i = 1; i <= imagesPerSlide; i++) {
             const img = document.createElement('img');
             img.src = `${config.basePath}set${setIndex + 1}-img${i}.${config.fileExtension}`;
             img.alt = `Set ${setIndex + 1} Image ${i}`;
@@ -161,9 +175,29 @@ function initializeSlidingWindowCarousel(config) {
 
     let startIndex = 0;
     let isAnimating = false;
+    let visibleItems = config.visibleItems;
 
-    // Initial render
-    renderVisibleImages(startIndex);
+    // Adjust visible items based on screen width
+    function updateVisibleItems() {
+        if (window.innerWidth <= 480) {
+            visibleItems = 1;
+        } else if (window.innerWidth <= 768) {
+            visibleItems = 2;
+        } else {
+            visibleItems = config.visibleItems;
+        }
+        renderVisibleImages(startIndex);
+    }
+
+    // Initial setup
+    updateVisibleItems();
+
+    // Listen for window resize
+    window.addEventListener('resize', function() {
+        if (!isAnimating) {
+            updateVisibleItems();
+        }
+    });
 
     // Event listeners
     prevBtn.addEventListener('click', function() {
@@ -187,16 +221,34 @@ function initializeSlidingWindowCarousel(config) {
 
         const carouselItem = document.createElement('div');
         carouselItem.className = 'carousel-item';
+        carouselItem.style.width = '100%';
 
         const imageGroup = document.createElement('div');
         imageGroup.className = 'carousel-item-group';
+        imageGroup.style.width = '100%';
+        imageGroup.style.display = 'flex';
+        imageGroup.style.flexWrap = 'wrap';
 
-        for (let i = 0; i < config.visibleItems; i++) {
+        for (let i = 0; i < visibleItems; i++) {
             const index = (startIdx + i) % config.totalImages;
             const img = document.createElement('img');
             img.src = `${config.basePath}texture${index + 1}.${config.fileExtension}`;
             img.alt = `Texture ${index + 1}`;
             img.loading = 'lazy';
+
+            // Ensure proper sizing based on number of visible items
+            if (visibleItems === 3) {
+                img.style.flexBasis = 'calc(33.333% - 0.667rem)';
+                img.style.minWidth = 'calc(33.333% - 0.667rem)';
+            } else if (visibleItems === 2) {
+                img.style.flexBasis = 'calc(50% - 0.5rem)';
+                img.style.minWidth = 'calc(50% - 0.5rem)';
+            } else {
+                img.style.flexBasis = '100%';
+                img.style.minWidth = '100%';
+            }
+
+            img.style.flexGrow = '1';
             imageGroup.appendChild(img);
         }
 
@@ -207,16 +259,34 @@ function initializeSlidingWindowCarousel(config) {
     function createImageSet(startIdx) {
         const carouselItem = document.createElement('div');
         carouselItem.className = 'carousel-item';
+        carouselItem.style.width = '100%';
 
         const imageGroup = document.createElement('div');
         imageGroup.className = 'carousel-item-group';
+        imageGroup.style.width = '100%';
+        imageGroup.style.display = 'flex';
+        imageGroup.style.flexWrap = 'wrap';
 
-        for (let i = 0; i < config.visibleItems; i++) {
+        for (let i = 0; i < visibleItems; i++) {
             const index = (startIdx + i) % config.totalImages;
             const img = document.createElement('img');
             img.src = `${config.basePath}texture${index + 1}.${config.fileExtension}`;
             img.alt = `Texture ${index + 1}`;
             img.loading = 'lazy';
+
+            // Ensure proper sizing based on number of visible items
+            if (visibleItems === 3) {
+                img.style.flexBasis = 'calc(33.333% - 0.667rem)';
+                img.style.minWidth = 'calc(33.333% - 0.667rem)';
+            } else if (visibleItems === 2) {
+                img.style.flexBasis = 'calc(50% - 0.5rem)';
+                img.style.minWidth = 'calc(50% - 0.5rem)';
+            } else {
+                img.style.flexBasis = '100%';
+                img.style.minWidth = '100%';
+            }
+
+            img.style.flexGrow = '1';
             imageGroup.appendChild(img);
         }
 
