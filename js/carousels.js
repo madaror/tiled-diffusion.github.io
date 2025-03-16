@@ -164,7 +164,9 @@ function initializeSlidingWindowCarousel(config) {
     let startIndex = 0;
     let isAnimating = false;
     let visibleItems = config.visibleItems;
-    let currentImages = [];
+
+    // Initial render
+    renderVisibleImages(startIndex);
 
     // Adjust visible items based on screen width
     function updateVisibleItems() {
@@ -178,9 +180,6 @@ function initializeSlidingWindowCarousel(config) {
         renderVisibleImages(startIndex);
     }
 
-    // Initial setup
-    updateVisibleItems();
-
     // Listen for window resize
     window.addEventListener('resize', function() {
         if (!isAnimating) {
@@ -191,51 +190,45 @@ function initializeSlidingWindowCarousel(config) {
     // Event listeners
     prevBtn.addEventListener('click', function() {
         if (isAnimating) return;
-        slideImages('prev');
+        slideWithIndividualFading('prev');
     });
 
     nextBtn.addEventListener('click', function() {
         if (isAnimating) return;
-        slideImages('next');
+        slideWithIndividualFading('next');
     });
 
     function renderVisibleImages(startIdx) {
         carousel.innerHTML = '';
-        currentImages = [];
 
         const carouselItem = document.createElement('div');
         carouselItem.className = 'carousel-item';
-        carouselItem.style.width = '100%';
+        carouselItem.style.position = 'relative';
+        carouselItem.style.overflow = 'hidden';
 
         const imageGroup = document.createElement('div');
         imageGroup.className = 'carousel-item-group';
-        imageGroup.style.width = '100%';
         imageGroup.style.display = 'flex';
-        imageGroup.style.flexWrap = 'wrap';
+        imageGroup.style.flexWrap = 'nowrap';
+        imageGroup.style.gap = '1rem';
 
         for (let i = 0; i < visibleItems; i++) {
             const index = (startIdx + i) % config.totalImages;
             const img = document.createElement('img');
             img.src = `${config.basePath}texture${index + 1}.${config.fileExtension}`;
             img.alt = `Texture ${index + 1}`;
-            img.loading = 'lazy';
             img.dataset.index = index;
+            img.loading = 'lazy';
 
-            // Ensure proper sizing based on number of visible items
+            // Apply flex sizing based on number of visible items
             if (visibleItems === 3) {
-                img.style.flexBasis = 'calc(33.333% - 0.667rem)';
-                img.style.minWidth = 'calc(33.333% - 0.667rem)';
+                img.style.flex = '0 0 calc(33.333% - 0.667rem)';
             } else if (visibleItems === 2) {
-                img.style.flexBasis = 'calc(50% - 0.5rem)';
-                img.style.minWidth = 'calc(50% - 0.5rem)';
+                img.style.flex = '0 0 calc(50% - 0.5rem)';
             } else {
-                img.style.flexBasis = '100%';
-                img.style.minWidth = '100%';
+                img.style.flex = '0 0 100%';
             }
 
-            img.style.flexGrow = '1';
-            img.style.transition = 'opacity 0.5s ease';
-            currentImages.push(img);
             imageGroup.appendChild(img);
         }
 
@@ -243,84 +236,117 @@ function initializeSlidingWindowCarousel(config) {
         carousel.appendChild(carouselItem);
     }
 
-    function slideImages(direction) {
+    function slideWithIndividualFading(direction) {
         isAnimating = true;
 
-        const imageGroup = carousel.querySelector('.carousel-item-group');
-        const oldImages = [...currentImages]; // Copy current images array
-
         // Calculate new start index
+        let newStartIndex;
         if (direction === 'next') {
-            startIndex = (startIndex + 1) % config.totalImages;
+            newStartIndex = (startIndex + 1) % config.totalImages;
         } else {
-            startIndex = (startIndex - 1 + config.totalImages) % config.totalImages;
+            newStartIndex = (startIndex - 1 + config.totalImages) % config.totalImages;
         }
 
-        // Determine which image is leaving and which is entering
-        let newIndex, oldIndex;
+        // Get current container and images
+        const currentContainer = carousel.querySelector('.carousel-item');
+        const imageGroup = currentContainer.querySelector('.carousel-item-group');
+        const currentImages = Array.from(imageGroup.querySelectorAll('img'));
 
-        if (direction === 'next') {
-            oldIndex = parseInt(oldImages[0].dataset.index);
-            newIndex = (startIndex + visibleItems - 1) % config.totalImages;
+        // Calculate position shift based on number of visible items
+        let positionShift;
+        if (visibleItems === 3) {
+            positionShift = '33.333%';
+        } else if (visibleItems === 2) {
+            positionShift = '50%';
         } else {
-            oldIndex = parseInt(oldImages[oldImages.length - 1].dataset.index);
-            newIndex = startIndex;
+            positionShift = '100%';
+        }
+
+        // Determine which image is leaving and needs to fade out
+        let leavingImageIndex, newImageIndex;
+        if (direction === 'next') {
+            // First image leaves, new image comes at the end
+            leavingImageIndex = parseInt(currentImages[0].dataset.index);
+            newImageIndex = (newStartIndex + visibleItems - 1) % config.totalImages;
+        } else {
+            // Last image leaves, new image comes at the beginning
+            leavingImageIndex = parseInt(currentImages[currentImages.length - 1].dataset.index);
+            newImageIndex = newStartIndex;
+        }
+
+        // Find the leaving image and apply fade-out
+        const leavingImage = currentImages.find(img => parseInt(img.dataset.index) === leavingImageIndex);
+        if (leavingImage) {
+            leavingImage.style.transition = 'opacity 0.5s ease-in-out, transform 0.5s ease-in-out';
+            leavingImage.style.opacity = '0';
+
+            if (direction === 'next') {
+                // Move the leaving image left
+                leavingImage.style.transform = `translateX(-${positionShift})`;
+            } else {
+                // Move the leaving image right
+                leavingImage.style.transform = `translateX(${positionShift})`;
+            }
         }
 
         // Create new image that will enter
         const newImg = document.createElement('img');
-        newImg.src = `${config.basePath}texture${newIndex + 1}.${config.fileExtension}`;
-        newImg.alt = `Texture ${newIndex + 1}`;
+        newImg.src = `${config.basePath}texture${newImageIndex + 1}.${config.fileExtension}`;
+        newImg.alt = `Texture ${newImageIndex + 1}`;
+        newImg.dataset.index = newImageIndex;
         newImg.loading = 'lazy';
-        newImg.dataset.index = newIndex;
         newImg.style.opacity = '0';
+        newImg.style.transition = 'opacity 0.5s ease-in-out, transform 0.5s ease-in-out';
 
-        // Size appropriately
+        // Apply flex sizing based on number of visible items
         if (visibleItems === 3) {
-            newImg.style.flexBasis = 'calc(33.333% - 0.667rem)';
-            newImg.style.minWidth = 'calc(33.333% - 0.667rem)';
+            newImg.style.flex = '0 0 calc(33.333% - 0.667rem)';
         } else if (visibleItems === 2) {
-            newImg.style.flexBasis = 'calc(50% - 0.5rem)';
-            newImg.style.minWidth = 'calc(50% - 0.5rem)';
+            newImg.style.flex = '0 0 calc(50% - 0.5rem)';
         } else {
-            newImg.style.flexBasis = '100%';
-            newImg.style.minWidth = '100%';
+            newImg.style.flex = '0 0 100%';
         }
-        newImg.style.flexGrow = '1';
-        newImg.style.transition = 'opacity 0.5s ease';
 
-        // Find the image that needs to be removed
-        const imageToRemove = oldImages.find(img => parseInt(img.dataset.index) === oldIndex);
-
-        // Add the new image to DOM (either at beginning or end)
+        // Position the new image
         if (direction === 'next') {
+            // Position new image to come from right
+            newImg.style.transform = `translateX(${positionShift})`;
             imageGroup.appendChild(newImg);
-            currentImages = [...oldImages.slice(1), newImg];
         } else {
+            // Position new image to come from left
+            newImg.style.transform = `translateX(-${positionShift})`;
             imageGroup.insertBefore(newImg, imageGroup.firstChild);
-            currentImages = [newImg, ...oldImages.slice(0, -1)];
         }
 
-        // Start animation
-        requestAnimationFrame(() => {
-            // Fade out old image
-            if (imageToRemove) {
-                imageToRemove.style.opacity = '0';
+        // For remaining images that stay visible, apply only position shift
+        currentImages.forEach(img => {
+            // Skip the leaving image, already handled
+            if (parseInt(img.dataset.index) === leavingImageIndex) return;
+
+            // Apply transition to remaining images (just position, not opacity)
+            img.style.transition = 'transform 0.5s ease-in-out';
+
+            // Move each remaining image by exactly one position
+            if (direction === 'next') {
+                img.style.transform = `translateX(-${positionShift})`;
+            } else {
+                img.style.transform = `translateX(${positionShift})`;
             }
-
-            // Fade in new image
-            setTimeout(() => {
-                newImg.style.opacity = '1';
-            }, 50);
-
-            // Remove old image after animation
-            setTimeout(() => {
-                if (imageToRemove && imageToRemove.parentNode) {
-                    imageGroup.removeChild(imageToRemove);
-                }
-                isAnimating = false;
-            }, 500);
         });
+
+        // Force reflow to ensure transitions start properly
+        void newImg.offsetWidth;
+
+        // Start the transitions
+        newImg.style.opacity = '1';
+        newImg.style.transform = 'translateX(0)';
+
+        // After animation completes
+        setTimeout(() => {
+            // Recreate the carousel with the new start index
+            renderVisibleImages(newStartIndex);
+            isAnimating = false;
+        }, 500);
     }
 }
 

@@ -302,6 +302,32 @@ header {
     width: 100%;
 }
 
+.carousel-item.slide-next-in {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translateX(100%);
+    width: 100%;
+    height: 100%;
+}
+
+.carousel-item.slide-next-in.active {
+    transform: translateX(0);
+}
+
+.carousel-item.slide-prev-in {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translateX(-100%);
+    width: 100%;
+    height: 100%;
+}
+
+.carousel-item.slide-prev-in.active {
+    transform: translateX(0);
+}
+
 .carousel-item.slide-next-out {
     transform: translateX(-100%);
     opacity: 0;
@@ -310,32 +336,6 @@ header {
 .carousel-item.slide-prev-out {
     transform: translateX(100%);
     opacity: 0;
-}
-
-.carousel-item.slide-next-in {
-    position: absolute;
-    top: 0;
-    left: 0;
-    transform: translateX(100%);
-    opacity: 0;
-}
-
-.carousel-item.slide-next-in.active {
-    transform: translateX(0);
-    opacity: 1;
-}
-
-.carousel-item.slide-prev-in {
-    position: absolute;
-    top: 0;
-    left: 0;
-    transform: translateX(-100%);
-    opacity: 0;
-}
-
-.carousel-item.slide-prev-in.active {
-    transform: translateX(0);
-    opacity: 1;
 }
 
 .carousel-item img {
