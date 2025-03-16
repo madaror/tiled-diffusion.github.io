@@ -22,7 +22,6 @@ If you find our work useful for your research, please consider citing:
     booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
     month     = {June},
     year      = {2025}
-
 }
 ```
 

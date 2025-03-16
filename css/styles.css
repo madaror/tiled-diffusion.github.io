@@ -204,13 +204,14 @@ header {
     margin: 0 auto 1.5rem;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     border-radius: 8px;
-    overflow: hidden;
+    overflow: visible; /* Changed from hidden to visible */
 }
 
 .teaser-image {
     width: 100%;
     height: auto;
     display: block;
+    max-width: 100%;
 }
 
 .teaser-text {
@@ -360,14 +361,30 @@ header {
 
 /* Specific carousel styling */
 /* Many-to-many carousel */
+.example-section:first-child .carousel-item-group {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 1rem;
+}
+
 .example-section:first-child .carousel-item-group img {
     width: calc(50% - 0.5rem);
 }
 
 @media (max-width: 768px) {
+    .example-section:first-child .carousel-item-group {
+        flex-direction: column;
+    }
+
     .example-section:first-child .carousel-item-group img {
         width: 100%;
         margin-bottom: 1rem;
+    }
+
+    /* Ensure both images are shown */
+    .example-section:first-child .carousel-item-group img:nth-child(2) {
+        display: block !important;
     }
 }
 
