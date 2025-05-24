@@ -5,10 +5,10 @@ document.addEventListener('DOMContentLoaded', function() {
         prevBtnId: 'many-to-many-prev',
         nextBtnId: 'many-to-many-next',
         imagesPerSlide: 2,
-        basePath: 'images/many-to-many/',
+        basePath: 'images/optimized/many-to-many/',
         // Format: set1-img1.png, set1-img2.png, set2-img1.png, etc.
         totalSets: 4, // Changed from 3 to 4 sets
-        fileExtension: 'png'
+        fileExtension: 'jpg'
     };
 
     // Configuration for Texture carousel (3 images visible, 1 changes at a time)
@@ -17,9 +17,9 @@ document.addEventListener('DOMContentLoaded', function() {
         prevBtnId: 'texture-prev',
         nextBtnId: 'texture-next',
         visibleItems: 3,
-        basePath: 'images/textures/',
+        basePath: 'images/optimized/textures/',
         totalImages: 9, // Change this based on how many texture GIFs you have
-        fileExtension: 'gif'
+        fileExtension: 'jpg'
     };
 
     // Configuration for Panorama carousel (1 image per slide)
@@ -27,20 +27,92 @@ document.addEventListener('DOMContentLoaded', function() {
         carouselId: 'panorama-carousel',
         prevBtnId: 'panorama-prev',
         nextBtnId: 'panorama-next',
-        basePath: 'images/panorama/',
+        basePath: 'images/optimized/panorama/',
         totalImages: 5, // Change this based on how many panorama GIFs you have
-        fileExtension: 'gif'
+        fileExtension: 'jpg'
     };
 
-    // Initialize Many-to-Many carousel (group slides)
-    initializeGroupCarousel(manyToManyConfig);
+    // Set up Intersection Observer for lazy initialization
+    const carouselObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const carouselId = entry.target.id;
 
-    // Initialize Texture carousel (sliding window)
-    initializeSlidingWindowCarousel(textureConfig);
+                // Initialize the appropriate carousel based on ID
+                switch (carouselId) {
+                    case 'many-to-many-carousel':
+                        initializeGroupCarousel(manyToManyConfig);
+                        break;
+                    case 'texture-carousel':
+                        initializeSlidingWindowCarousel(textureConfig);
+                        break;
+                    case 'panorama-carousel':
+                        initializeSingleImageCarousel(panoramaConfig);
+                        break;
+                }
 
-    // Initialize Panorama carousel (single image per slide)
-    initializeSingleImageCarousel(panoramaConfig);
+                // Stop observing this carousel once initialized
+                carouselObserver.unobserve(entry.target);
+            }
+        });
+    }, {
+        rootMargin: '100px' // Start loading 100px before carousel is visible
+    });
+
+    // Observe all carousels
+    document.querySelectorAll('.carousel').forEach(carousel => {
+        carouselObserver.observe(carousel);
+    });
 });
+
+// Preload images for smoother transitions
+function preloadImage(src) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = resolve;
+        img.onerror = reject;
+        img.src = src;
+    });
+}
+
+// Preload adjacent images when user interacts with carousel
+function preloadAdjacentImages(config, currentIndex, type = 'single') {
+    const indices = [];
+
+    if (type === 'single' || type === 'sliding') {
+        // Preload next and previous images
+        const prevIndex = (currentIndex - 1 + config.totalImages) % config.totalImages;
+        const nextIndex = (currentIndex + 1) % config.totalImages;
+        indices.push(prevIndex, nextIndex);
+
+        if (type === 'sliding' && config.visibleItems) {
+            // For sliding carousel, preload images that might become visible
+            for (let i = 2; i < config.visibleItems + 2; i++) {
+                indices.push((currentIndex + i) % config.totalImages);
+                indices.push((currentIndex - i + config.totalImages) % config.totalImages);
+            }
+        }
+    } else if (type === 'group') {
+        // For group carousel, preload next and previous sets
+        const prevSet = (currentIndex - 1 + config.totalSets) % config.totalSets;
+        const nextSet = (currentIndex + 1) % config.totalSets;
+
+        [prevSet, nextSet].forEach(setIndex => {
+            for (let i = 1; i <= config.imagesPerSlide; i++) {
+                const src = `${config.basePath}set${setIndex + 1}-img${i}.${config.fileExtension}`;
+                preloadImage(src);
+            }
+        });
+        return;
+    }
+
+    // Preload the calculated indices
+    indices.forEach(index => {
+        const prefix = type === 'sliding' ? 'texture' : 'panorama';
+        const src = `${config.basePath}${prefix}${index + 1}.${config.fileExtension}`;
+        preloadImage(src);
+    });
+}
 
 /**
  * Initialize a carousel where multiple images are shown together as a group
@@ -57,6 +129,9 @@ function initializeGroupCarousel(config) {
     // Initial render
     renderImageSet(currentSetIndex);
 
+    // Preload adjacent sets
+    preloadAdjacentImages(config, currentSetIndex, 'group');
+
     // Event listeners
     prevBtn.addEventListener('click', function() {
         if (isAnimating) return;
@@ -72,6 +147,7 @@ function initializeGroupCarousel(config) {
         const nextSetIndex = (currentSetIndex + 1) % config.totalSets;
         animateCarousel(currentSetIndex, nextSetIndex, 'next');
         currentSetIndex = nextSetIndex;
+        preloadAdjacentImages(config, nextSetIndex, 'group');
     });
 
     function renderImageSet(setIndex) {
@@ -343,8 +419,10 @@ function initializeSlidingWindowCarousel(config) {
 
         // After animation completes
         setTimeout(() => {
+            // Update the start index
+            startIndex = newStartIndex;
             // Recreate the carousel with the new start index
-            renderVisibleImages(newStartIndex);
+            renderVisibleImages(startIndex);
             isAnimating = false;
         }, 500);
     }

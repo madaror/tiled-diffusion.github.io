@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://madaror.github.io/tiled-diffusion.github.io/sitemap.xml

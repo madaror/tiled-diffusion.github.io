@@ -3,126 +3,226 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tiled Diffusion</title>
+    <title>Tiled Diffusion - CVPR 2025 | Seamless Image Tiling with Diffusion Models</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description"
+          content="Tiled Diffusion: A novel approach for generating seamlessly tileable images using diffusion models. Accepted at CVPR 2025. Supports texture creation, video game assets, and 360° panorama synthesis.">
+    <meta name="keywords"
+          content="tiled diffusion, image tiling, diffusion models, CVPR 2025, texture synthesis, seamless tiling, computer vision, image generation, panorama synthesis, tileable textures, Or Madar, Ohad Fried, Reichman University">
+    <meta name="author" content="Or Madar, Ohad Fried">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph Meta Tags for Social Media -->
+    <meta property="og:title" content="Tiled Diffusion - CVPR 2025">
+    <meta property="og:description"
+          content="A novel approach for generating seamlessly tileable images using diffusion models. Supports texture creation, video game assets, and 360° panorama synthesis.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://madaror.github.io/tiled-diffusion.github.io/">
+    <meta property="og:image" content="https://madaror.github.io/tiled-diffusion.github.io/images/optimized/teaser.jpg">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Tiled Diffusion - CVPR 2025">
+    <meta name="twitter:description"
+          content="A novel approach for generating seamlessly tileable images using diffusion models.">
+    <meta name="twitter:image"
+          content="https://madaror.github.io/tiled-diffusion.github.io/images/optimized/teaser.jpg">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://madaror.github.io/tiled-diffusion.github.io/">
+
+    <!-- Preconnect to external domains -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Stylesheets -->
     <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          media="print" onload="this.media='all'">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap"
+          rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap"
+              rel="stylesheet">
+    </noscript>
+
+    <!-- Preload critical images -->
+    <link rel="preload" as="image" href="images/optimized/teaser.jpg">
+
+    <!-- Structured Data for SEO -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "ScholarlyArticle",
+            "headline": "Tiled Diffusion",
+            "name": "Tiled Diffusion: A Novel Approach for Generating Seamlessly Tileable Images",
+            "author": [
+                {
+                    "@type": "Person",
+                    "name": "Or Madar",
+                    "url": "https://www.linkedin.com/in/or-madar-a73bb5143/",
+                    "affiliation": {
+                        "@type": "Organization",
+                        "name": "Reichman University"
+                    }
+                },
+                {
+                    "@type": "Person",
+                    "name": "Ohad Fried",
+                    "url": "https://www.ohadf.com/",
+                    "affiliation": {
+                        "@type": "Organization",
+                        "name": "Reichman University"
+                    }
+                }
+            ],
+            "datePublished": "2024-12-20",
+            "publisher": {
+                "@type": "Organization",
+                "name": "CVPR 2025"
+            },
+            "description": "A novel approach that extends the capabilities of diffusion models to accommodate the generation of cohesive tiling patterns across various domains of image synthesis.",
+            "url": "https://madaror.github.io/tiled-diffusion.github.io/",
+            "image": "https://madaror.github.io/tiled-diffusion.github.io/images/optimized/teaser.jpg",
+            "keywords": "diffusion models, image tiling, texture synthesis, computer vision, image generation"
+        }
+    </script>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1 class="title">Tiled Diffusion</h1>
-            
-            <div class="authors">
-                <a href="https://www.linkedin.com/in/or-madar-a73bb5143/" target="_blank">Or Madar</a>
-                <span class="author-separator">·</span>
-                <a href="https://www.ohadf.com/" target="_blank">Ohad Fried</a>
-            </div>
-            
-            <div class="institution">
-                Computer Vision & Graphics Lab, Reichman University
-            </div>
-            
-            <div class="buttons">
-                <a href="https://github.com/madaror/tiled-diffusion.github.io/blob/0cbe6a3b086358b639df7acb55ddcededc94bec8/docs/tiled_diffusion_supp.pdf" target="_blank" class="btn">Supplemental</a>
-                <a href="https://arxiv.org/abs/2412.15185" target="_blank" class="btn">arXiv</a>
-                <a href="https://arxiv.org/pdf/2412.15185" target="_blank" class="btn">Paper</a>
-                <a href="https://github.com/madaror/tiled-diffusion" target="_blank" class="btn">Code</a>
-            </div>
+<div class="container">
+    <header>
+        <h1 class="title">Tiled Diffusion</h1>
 
-            <div class="conference-banner">
-                <a href="https://cvpr.thecvf.com/Conferences/2025" target="_blank" class="conference-link">
-                    <span class="conference-text">CVPR</span>
-                    <span class="conference-year">2025</span>
-                </a>
-            </div>
-        </header>
+        <div class="authors">
+            <a href="https://www.linkedin.com/in/or-madar-a73bb5143/" target="_blank">Or Madar</a>
+            <span class="author-separator">·</span>
+            <a href="https://www.ohadf.com/" target="_blank">Ohad Fried</a>
+        </div>
 
-        <section class="teaser">
-            <div class="teaser-image-container" style="padding: 20px 0;">
-                <img src="images/teaser.svg" alt="Tiled Diffusion Teaser" class="teaser-image">
-            </div>
-            <p class="teaser-text"><span class="highlight">Tiled Diffusion</span> is a novel approach for generating seamlessly tileable images using diffusion models.</p>
-        </section>
+        <div class="institution">
+            Computer Vision & Graphics Lab, Reichman University
+        </div>
 
-        <section class="abstract">
-            <h2>Abstract</h2>
-            <p>
-                Image tiling—the seamless connection of disparate images to create a coherent visual field—is crucial for applications such as texture creation, video game asset development, and digital art. Traditionally, tiles have been constructed manually, a method that poses significant limitations in scalability and flexibility. Recent research has attempted to automate this process using generative models. However, current approaches primarily focus on tiling textures and manipulating models for single-image generation, without inherently supporting the creation of multiple interconnected tiles across diverse domains. This paper presents Tiled Diffusion, a novel approach that extends the capabilities of diffusion models to accommodate the generation of cohesive tiling patterns across various domains of image synthesis that require tiling. Our method supports a wide range of tiling scenarios, from self-tiling to complex many-to-many connections, enabling seamless integration of multiple images. Tiled Diffusion automates the tiling process, eliminating the need for manual intervention and enhancing creative possibilities in various applications, such as seamlessly tiling of existing images, tiled texture creation, and 360° synthesis.
-            </p>
-        </section>
+        <div class="buttons">
+            <a href="https://github.com/madaror/tiled-diffusion.github.io/blob/0cbe6a3b086358b639df7acb55ddcededc94bec8/docs/tiled_diffusion_supp.pdf"
+               target="_blank" class="btn">Supplemental</a>
+            <a href="https://arxiv.org/abs/2412.15185" target="_blank" class="btn">arXiv</a>
+            <a href="https://arxiv.org/pdf/2412.15185" target="_blank" class="btn">Paper</a>
+            <a href="https://github.com/madaror/tiled-diffusion" target="_blank" class="btn">Code</a>
+        </div>
 
-        <section class="method">
-            <h2>Method</h2>
-            <div class="method-image-container">
-                <img src="images/Method.png" alt="Tiled Diffusion Method" class="method-image">
-            </div>
-            <p class="method-caption">An example of a many-to-many tiling scenario demonstrating tiling / similarity constraint on the left side of the first image</p>
-        </section>
+        <div class="conference-banner">
+            <a href="https://cvpr.thecvf.com/Conferences/2025" target="_blank" class="conference-link">
+                <span class="conference-text">CVPR</span>
+                <span class="conference-year">2025</span>
+            </a>
+        </div>
+    </header>
 
-        <section class="examples">
-            <div class="example-section">
-                <h2>Many-To-Many</h2>
-                <div class="carousel-container">
-                    <div class="carousel" id="many-to-many-carousel">
-                        <!-- Carousel items will be populated by JavaScript -->
-                    </div>
-                    <button class="carousel-btn prev" id="many-to-many-prev">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    <button class="carousel-btn next" id="many-to-many-next">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
+    <section class="teaser">
+        <div class="teaser-image-container" style="padding: 20px 0;">
+            <img src="images/optimized/teaser.jpg" alt="Tiled Diffusion Teaser" class="teaser-image">
+        </div>
+        <p class="teaser-text"><span class="highlight">Tiled Diffusion</span> is a novel approach for generating
+            seamlessly tileable images using diffusion models.</p>
+    </section>
+
+    <section class="abstract">
+        <h2>Abstract</h2>
+        <p>
+            Image tiling—the seamless connection of disparate images to create a coherent visual field—is crucial for
+            applications such as texture creation, video game asset development, and digital art. Traditionally, tiles
+            have been constructed manually, a method that poses significant limitations in scalability and flexibility.
+            Recent research has attempted to automate this process using generative models. However, current approaches
+            primarily focus on tiling textures and manipulating models for single-image generation, without inherently
+            supporting the creation of multiple interconnected tiles across diverse domains. This paper presents Tiled
+            Diffusion, a novel approach that extends the capabilities of diffusion models to accommodate the generation
+            of cohesive tiling patterns across various domains of image synthesis that require tiling. Our method
+            supports a wide range of tiling scenarios, from self-tiling to complex many-to-many connections, enabling
+            seamless integration of multiple images. Tiled Diffusion automates the tiling process, eliminating the need
+            for manual intervention and enhancing creative possibilities in various applications, such as seamlessly
+            tiling of existing images, tiled texture creation, and 360° synthesis.
+        </p>
+    </section>
+
+    <section class="method">
+        <h2>Method</h2>
+        <div class="method-image-container">
+            <img src="images/optimized/Method.jpg" alt="Tiled Diffusion Method" class="method-image">
+        </div>
+        <p class="method-caption">An example of a many-to-many tiling scenario demonstrating tiling / similarity
+            constraint on the left side of the first image</p>
+    </section>
+
+    <section class="examples">
+        <div class="example-section">
+            <h2>Many-To-Many</h2>
+            <div class="carousel-container">
+                <div class="carousel" id="many-to-many-carousel">
+                    <!-- Carousel items will be populated by JavaScript -->
                 </div>
+                <button class="carousel-btn prev" id="many-to-many-prev">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="carousel-btn next" id="many-to-many-next">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
             </div>
+        </div>
 
-            <div class="example-section">
-                <h2>Tileable Texture Synthesis</h2>
-                <div class="carousel-container">
-                    <div class="carousel" id="texture-carousel">
-                        <!-- Carousel items will be populated by JavaScript -->
-                    </div>
-                    <button class="carousel-btn prev" id="texture-prev">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    <button class="carousel-btn next" id="texture-next">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
+        <div class="example-section">
+            <h2>Tileable Texture Synthesis</h2>
+            <div class="carousel-container">
+                <div class="carousel" id="texture-carousel">
+                    <!-- Carousel items will be populated by JavaScript -->
                 </div>
+                <button class="carousel-btn prev" id="texture-prev">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="carousel-btn next" id="texture-next">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
             </div>
+        </div>
 
-            <div class="example-section">
-                <h2>360° Panorama Synthesis</h2>
-                <div class="carousel-container">
-                    <div class="carousel" id="panorama-carousel">
-                        <!-- Carousel items will be populated by JavaScript -->
-                    </div>
-                    <button class="carousel-btn prev" id="panorama-prev">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    <button class="carousel-btn next" id="panorama-next">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
+        <div class="example-section">
+            <h2>360° Panorama Synthesis</h2>
+            <div class="carousel-container">
+                <div class="carousel" id="panorama-carousel">
+                    <!-- Carousel items will be populated by JavaScript -->
                 </div>
+                <button class="carousel-btn prev" id="panorama-prev">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="carousel-btn next" id="panorama-next">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section class="note">
-            <p>For more results please look at our <a href="https://arxiv.org/pdf/2412.15185" target="_blank" class="note-link">paper</a> / <a href="https://github.com/madaror/tiled-diffusion.github.io/blob/0cbe6a3b086358b639df7acb55ddcededc94bec8/docs/tiled_diffusion_supp.pdf" target="_blank" class="note-link">supplemental material</a></p>
-        </section>
+    <section class="note">
+        <p>For more results please look at our <a href="https://arxiv.org/pdf/2412.15185" target="_blank"
+                                                  class="note-link">paper</a> / <a
+                href="https://github.com/madaror/tiled-diffusion.github.io/blob/0cbe6a3b086358b639df7acb55ddcededc94bec8/docs/tiled_diffusion_supp.pdf"
+                target="_blank" class="note-link">supplemental material</a></p>
+    </section>
 
-        <section class="bibtex">
-            <h2>BibTeX</h2>
-            <pre><code>@InProceedings{Madar_2025_CVPR,
+    <section class="bibtex">
+        <h2>BibTeX</h2>
+        <pre><code>@InProceedings{Madar_2025_CVPR,
     author    = {Madar, Or and Fried, Ohad},
     title     = {Tiled Diffusion},
     booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
     month     = {June},
     year      = {2025}
 }</code></pre>
-        </section>
-    </div>
+    </section>
+</div>
 
-    <script src="js/carousels.js"></script>
+<script src="js/carousels.js" defer></script>
 </body>
 </html>
