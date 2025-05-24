@@ -32,21 +32,29 @@
     <!-- Canonical URL -->
     <link rel="canonical" href="https://madaror.github.io/tiled-diffusion.github.io/">
 
-    <!-- Preconnect to external domains -->
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <!-- Preconnect to external domains with proper crossorigin -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
+    <!-- Critical CSS inline for faster rendering -->
+    <style>
+        /* Critical inline styles for above-the-fold content */
+        :root{--primary-color:#000;--secondary-color:#2563eb;--text-color:#333;--background-color:#fff;--accent-color:#f5f5f5;--spacing:2rem}*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}body{font-family:Roboto,sans-serif;line-height:1.6;color:var(--text-color);background-color:var(--background-color)}.container{max-width:1200px;margin:0 auto;padding:2rem}h1,h2,h3{font-family:Montserrat,sans-serif;margin-bottom:1rem;color:var(--primary-color)}h1.title{font-size:3.5rem;text-align:center;margin-bottom:1rem;background:linear-gradient(90deg,#000,#3b82f6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-1px}header{text-align:center;margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid rgba(0,0,0,.1)}.authors{font-size:1.2rem;margin-bottom:.5rem}.institution{font-size:1.1rem;margin-bottom:2rem;color:#666}.buttons{display:flex;justify-content:center;gap:1rem;flex-wrap:wrap}.btn{display:inline-block;background-color:var(--primary-color);color:#fff;padding:.75rem 1.5rem;border-radius:30px;font-weight:500;transition:all .3s ease;border:2px solid var(--primary-color);box-shadow:0 4px 6px rgba(0,0,0,.1);text-decoration:none}.btn:hover{background-color:#fff;color:var(--primary-color);transform:translateY(-3px);box-shadow:0 7px 14px rgba(0,0,0,.15)}
+
+    </style>
+
     <!-- Stylesheets -->
     <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-          media="print" onload="this.media='all'">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap"
-          rel="stylesheet" media="print" onload="this.media='all'">
+    <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" as="style"
+          href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap"
+          onload="this.onload=null;this.rel='stylesheet'">
     <noscript>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap"
-              rel="stylesheet">
+        <link rel="stylesheet"
+              href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap">
     </noscript>
 
     <!-- Preload critical images -->
@@ -124,7 +132,15 @@
 
     <section class="teaser">
         <div class="teaser-image-container" style="padding: 20px 0;">
-            <img src="images/optimized/teaser.jpg" alt="Tiled Diffusion Teaser" class="teaser-image">
+            <picture>
+                <source srcset="images/optimized/teaser.webp" type="image/webp">
+                <img src="images/optimized/teaser.jpg"
+                     alt="Tiled Diffusion Teaser showing seamless image tiling examples"
+                     class="teaser-image"
+                     width="900"
+                     height="450"
+                     loading="eager">
+            </picture>
         </div>
         <p class="teaser-text"><span class="highlight">Tiled Diffusion</span> is a novel approach for generating
             seamlessly tileable images using diffusion models.</p>
@@ -151,7 +167,15 @@
     <section class="method">
         <h2>Method</h2>
         <div class="method-image-container">
-            <img src="images/optimized/Method.jpg" alt="Tiled Diffusion Method" class="method-image">
+            <picture>
+                <source srcset="images/optimized/Method.webp" type="image/webp">
+                <img src="images/optimized/Method.jpg"
+                     alt="Tiled Diffusion Method diagram showing tiling constraint on the left side"
+                     class="method-image"
+                     width="800"
+                     height="400"
+                     loading="lazy">
+            </picture>
         </div>
         <p class="method-caption">An example of a many-to-many tiling scenario demonstrating tiling / similarity
             constraint on the left side of the first image</p>
@@ -164,11 +188,11 @@
                 <div class="carousel" id="many-to-many-carousel">
                     <!-- Carousel items will be populated by JavaScript -->
                 </div>
-                <button class="carousel-btn prev" id="many-to-many-prev">
-                    <i class="fas fa-chevron-left"></i>
+                <button class="carousel-btn prev" id="many-to-many-prev" aria-label="Previous many-to-many example">
+                    <i class="fas fa-chevron-left" aria-hidden="true"></i>
                 </button>
-                <button class="carousel-btn next" id="many-to-many-next">
-                    <i class="fas fa-chevron-right"></i>
+                <button class="carousel-btn next" id="many-to-many-next" aria-label="Next many-to-many example">
+                    <i class="fas fa-chevron-right" aria-hidden="true"></i>
                 </button>
             </div>
         </div>
@@ -179,11 +203,11 @@
                 <div class="carousel" id="texture-carousel">
                     <!-- Carousel items will be populated by JavaScript -->
                 </div>
-                <button class="carousel-btn prev" id="texture-prev">
-                    <i class="fas fa-chevron-left"></i>
+                <button class="carousel-btn prev" id="texture-prev" aria-label="Previous texture example">
+                    <i class="fas fa-chevron-left" aria-hidden="true"></i>
                 </button>
-                <button class="carousel-btn next" id="texture-next">
-                    <i class="fas fa-chevron-right"></i>
+                <button class="carousel-btn next" id="texture-next" aria-label="Next texture example">
+                    <i class="fas fa-chevron-right" aria-hidden="true"></i>
                 </button>
             </div>
         </div>
@@ -194,11 +218,11 @@
                 <div class="carousel" id="panorama-carousel">
                     <!-- Carousel items will be populated by JavaScript -->
                 </div>
-                <button class="carousel-btn prev" id="panorama-prev">
-                    <i class="fas fa-chevron-left"></i>
+                <button class="carousel-btn prev" id="panorama-prev" aria-label="Previous panorama example">
+                    <i class="fas fa-chevron-left" aria-hidden="true"></i>
                 </button>
-                <button class="carousel-btn next" id="panorama-next">
-                    <i class="fas fa-chevron-right"></i>
+                <button class="carousel-btn next" id="panorama-next" aria-label="Next panorama example">
+                    <i class="fas fa-chevron-right" aria-hidden="true"></i>
                 </button>
             </div>
         </div>

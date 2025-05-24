@@ -8,7 +8,9 @@ document.addEventListener('DOMContentLoaded', function() {
         basePath: 'images/optimized/many-to-many/',
         // Format: set1-img1.png, set1-img2.png, set2-img1.png, etc.
         totalSets: 4, // Changed from 3 to 4 sets
-        fileExtension: 'jpg'
+        fileExtension: 'jpg',
+        imageWidth: 450,
+        imageHeight: 300
     };
 
     // Configuration for Texture carousel (3 images visible, 1 changes at a time)
@@ -19,7 +21,9 @@ document.addEventListener('DOMContentLoaded', function() {
         visibleItems: 3,
         basePath: 'images/optimized/textures/',
         totalImages: 9, // Change this based on how many texture GIFs you have
-        fileExtension: 'jpg'
+        fileExtension: 'jpg',
+        imageWidth: 300,
+        imageHeight: 300
     };
 
     // Configuration for Panorama carousel (1 image per slide)
@@ -29,7 +33,9 @@ document.addEventListener('DOMContentLoaded', function() {
         nextBtnId: 'panorama-next',
         basePath: 'images/optimized/panorama/',
         totalImages: 5, // Change this based on how many panorama GIFs you have
-        fileExtension: 'jpg'
+        fileExtension: 'jpg',
+        imageWidth: 1000,
+        imageHeight: 400
     };
 
     // Set up Intersection Observer for lazy initialization
@@ -165,6 +171,8 @@ function initializeGroupCarousel(config) {
             img.src = `${config.basePath}set${setIndex + 1}-img${i}.${config.fileExtension}`;
             img.alt = `Set ${setIndex + 1} Image ${i}`;
             img.loading = 'lazy';
+            img.width = config.imageWidth;
+            img.height = config.imageHeight;
             imageGroup.appendChild(img);
         }
 
@@ -185,6 +193,8 @@ function initializeGroupCarousel(config) {
             img.src = `${config.basePath}set${setIndex + 1}-img${i}.${config.fileExtension}`;
             img.alt = `Set ${setIndex + 1} Image ${i}`;
             img.loading = 'lazy';
+            img.width = config.imageWidth;
+            img.height = config.imageHeight;
             imageGroup.appendChild(img);
         }
 
@@ -295,6 +305,8 @@ function initializeSlidingWindowCarousel(config) {
             img.alt = `Texture ${index + 1}`;
             img.dataset.index = index;
             img.loading = 'lazy';
+            img.width = config.imageWidth;
+            img.height = config.imageHeight;
 
             // Apply flex sizing based on number of visible items
             if (visibleItems === 3) {
@@ -371,6 +383,8 @@ function initializeSlidingWindowCarousel(config) {
         newImg.alt = `Texture ${newImageIndex + 1}`;
         newImg.dataset.index = newImageIndex;
         newImg.loading = 'lazy';
+        newImg.width = config.imageWidth;
+        newImg.height = config.imageHeight;
         newImg.style.opacity = '0';
         newImg.style.transition = 'opacity 0.5s ease-in-out, transform 0.5s ease-in-out';
 
@@ -469,6 +483,8 @@ function initializeSingleImageCarousel(config) {
         img.src = `${config.basePath}panorama${index + 1}.${config.fileExtension}`;
         img.alt = `Panorama ${index + 1}`;
         img.loading = 'lazy';
+        img.width = config.imageWidth;
+        img.height = config.imageHeight;
 
         carouselItem.appendChild(img);
         carousel.appendChild(carouselItem);
@@ -482,6 +498,8 @@ function initializeSingleImageCarousel(config) {
         img.src = `${config.basePath}panorama${index + 1}.${config.fileExtension}`;
         img.alt = `Panorama ${index + 1}`;
         img.loading = 'lazy';
+        img.width = config.imageWidth;
+        img.height = config.imageHeight;
 
         carouselItem.appendChild(img);
         return carouselItem;

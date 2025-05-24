@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Image optimization script for Tiled Diffusion website
-Reduces image file sizes while maintaining visual quality
+Enhanced image optimization script for Tiled Diffusion website
+Creates both JPEG and WebP versions for better compression
 """
 
 import os
@@ -10,9 +10,10 @@ from PIL import Image
 import argparse
 
 
-def optimize_image(input_path, output_path, max_width=1920, quality=85, format='JPEG'):
+def optimize_image(input_path, output_path, max_width=1920, quality=85, format='JPEG', create_webp=True):
     """
     Optimize a single image by resizing and compressing it.
+    Also creates a WebP version for better compression.
 
     Args:
         input_path: Path to input image
@@ -20,53 +21,91 @@ def optimize_image(input_path, output_path, max_width=1920, quality=85, format='
         max_width: Maximum width in pixels (height scaled proportionally)
         quality: JPEG quality (1-100)
         format: Output format (JPEG or WebP)
+        create_webp: Also create a WebP version
     """
     try:
         # Open the image
         img = Image.open(input_path)
 
-        # Convert RGBA to RGB if saving as JPEG
-        if format == 'JPEG' and img.mode in ('RGBA', 'LA', 'P'):
-            # Create a white background
-            background = Image.new('RGB', img.size, (255, 255, 255))
-            if img.mode == 'P':
-                img = img.convert('RGBA')
-            background.paste(img, mask=img.split()[-1] if img.mode == 'RGBA' else None)
-            img = background
+        # Check if it's a GIF
+        is_gif = input_path.lower().endswith('.gif')
 
-        # Calculate new dimensions maintaining aspect ratio
-        if img.width > max_width:
-            ratio = max_width / img.width
-            new_width = max_width
-            new_height = int(img.height * ratio)
-            img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
+        # For GIFs, keep them as GIFs and don't convert
+        if is_gif:
+            output_path = output_path.rsplit('.', 1)[0] + '.gif'
 
-        # Save optimized image
-        save_kwargs = {
-            'optimize': True,
-            'quality': quality
-        }
+            # Still resize if needed
+            if img.width > max_width:
+                ratio = max_width / img.width
+                new_width = max_width
+                new_height = int(img.height * ratio)
+                try:
+                    img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
+                except AttributeError:
+                    img = img.resize((new_width, new_height), Image.LANCZOS)
 
-        if format == 'JPEG':
-            save_kwargs['progressive'] = True
-            img.save(output_path, 'JPEG', **save_kwargs)
-        elif format == 'WebP':
-            save_kwargs['method'] = 6  # Slowest but best compression
-            img.save(output_path, 'WebP', **save_kwargs)
+            img.save(output_path, 'GIF', optimize=True)
 
-        # Print size reduction
-        original_size = os.path.getsize(input_path) / 1024 / 1024  # MB
-        new_size = os.path.getsize(output_path) / 1024 / 1024  # MB
-        reduction = (1 - new_size / original_size) * 100
+            # Print size reduction
+            original_size = os.path.getsize(input_path) / 1024 / 1024  # MB
+            new_size = os.path.getsize(output_path) / 1024 / 1024  # MB
+            reduction = (1 - new_size / original_size) * 100
+            print(
+                f"✓ {os.path.basename(input_path)}: {original_size:.2f}MB → {new_size:.2f}MB ({reduction:.1f}% reduction)")
+        else:
+            # Convert RGBA to RGB if saving as JPEG
+            if format == 'JPEG' and img.mode in ('RGBA', 'LA', 'P'):
+                # Create a white background
+                background = Image.new('RGB', img.size, (255, 255, 255))
+                if img.mode == 'P':
+                    img = img.convert('RGBA')
+                background.paste(img, mask=img.split()[-1] if img.mode == 'RGBA' else None)
+                img = background
 
-        print(
-            f"✓ {os.path.basename(input_path)}: {original_size:.2f}MB → {new_size:.2f}MB ({reduction:.1f}% reduction)")
+            # Calculate new dimensions maintaining aspect ratio
+            if img.width > max_width:
+                ratio = max_width / img.width
+                new_width = max_width
+                new_height = int(img.height * ratio)
+                # Use LANCZOS for high-quality downsampling
+                try:
+                    # For Pillow >= 10.0.0
+                    img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
+                except AttributeError:
+                    # For older versions of Pillow
+                    img = img.resize((new_width, new_height), Image.LANCZOS)
+
+            # Save optimized JPEG
+            jpeg_path = output_path
+            save_kwargs = {
+                'optimize': True,
+                'quality': quality,
+                'progressive': True
+            }
+            img.save(jpeg_path, 'JPEG', **save_kwargs)
+
+            # Print JPEG size reduction
+            original_size = os.path.getsize(input_path) / 1024 / 1024  # MB
+            jpeg_size = os.path.getsize(jpeg_path) / 1024 / 1024  # MB
+            reduction = (1 - jpeg_size / original_size) * 100
+            print(
+                f"✓ {os.path.basename(input_path)} → JPEG: {original_size:.2f}MB → {jpeg_size:.2f}MB ({reduction:.1f}% reduction)")
+
+            # Also create WebP version
+            if create_webp:
+                webp_path = output_path.rsplit('.', 1)[0] + '.webp'
+                img.save(webp_path, 'WebP', quality=quality, method=6, lossless=False)
+
+                # Print WebP size
+                webp_size = os.path.getsize(webp_path) / 1024 / 1024  # MB
+                webp_reduction = (1 - webp_size / original_size) * 100
+                print(f"  → WebP: {webp_size:.2f}MB ({webp_reduction:.1f}% reduction)")
 
     except Exception as e:
         print(f"✗ Error processing {input_path}: {str(e)}")
 
 
-def create_responsive_versions(input_path, output_dir, base_name):
+def create_responsive_versions(input_path, output_dir, base_name, create_webp=True):
     """
     Create multiple sizes for responsive loading.
     """
@@ -78,7 +117,7 @@ def create_responsive_versions(input_path, output_dir, base_name):
 
     for width, suffix in sizes:
         output_path = os.path.join(output_dir, f"{base_name}-{suffix}.jpg")
-        optimize_image(input_path, output_path, max_width=width, quality=85)
+        optimize_image(input_path, output_path, max_width=width, quality=85, create_webp=create_webp)
 
 
 def main():
@@ -87,8 +126,8 @@ def main():
     parser.add_argument('--output-dir', default='images/optimized', help='Output directory for optimized images')
     parser.add_argument('--max-width', type=int, default=1920, help='Maximum width in pixels')
     parser.add_argument('--quality', type=int, default=85, help='JPEG quality (1-100)')
-    parser.add_argument('--format', choices=['JPEG', 'WebP'], default='JPEG', help='Output format')
     parser.add_argument('--responsive', action='store_true', help='Create multiple sizes for responsive loading')
+    parser.add_argument('--no-webp', action='store_true', help='Do not create WebP versions')
 
     args = parser.parse_args()
 
@@ -113,27 +152,25 @@ def main():
 
                 if args.responsive:
                     base_name = os.path.splitext(file)[0]
-                    create_responsive_versions(input_path, output_subdir, base_name)
+                    create_responsive_versions(input_path, output_subdir, base_name, not args.no_webp)
                 else:
                     # Single optimized version
-                    ext = '.jpg' if args.format == 'JPEG' else '.webp'
-                    output_file = os.path.splitext(file)[0] + ext
+                    output_file = os.path.splitext(file)[0] + '.jpg'
                     output_path = os.path.join(output_subdir, output_file)
-                    optimize_image(input_path, output_path, args.max_width, args.quality, args.format)
+                    optimize_image(input_path, output_path, args.max_width, args.quality, 'JPEG', not args.no_webp)
 
                 processed += 1
 
     print(f"\n✅ Processed {processed} images")
     print(f"📁 Optimized images saved to: {args.output_dir}")
 
-    # Provide HTML snippet for responsive images
-    if args.responsive:
-        print("\n📝 Example HTML for responsive images:")
+    # Provide HTML snippet for using WebP with fallback
+    if not args.no_webp:
+        print("\n📝 Use this HTML pattern for WebP with JPEG fallback:")
         print("""
 <picture>
-    <source media="(max-width: 640px)" srcset="images/optimized/image-small.jpg">
-    <source media="(max-width: 1024px)" srcset="images/optimized/image-medium.jpg">
-    <img src="images/optimized/image-large.jpg" alt="Description" loading="lazy">
+    <source srcset="images/optimized/image.webp" type="image/webp">
+    <img src="images/optimized/image.jpg" alt="Description" loading="lazy" width="800" height="400">
 </picture>
         """)
 
